@@ -4,39 +4,59 @@ import (
 	"fmt"
 
 	"github.com/your-org/a-morph-king3-go/internal/calculator"
+	"github.com/your-org/a-morph-king3-go/internal/ui"
 )
 
 func main() {
-	// Minimal main.go to validate architecture
-	// This demonstrates that operations can be called and error handling works
+	fmt.Println("Welcome to the Simple Calculator!")
 
-	fmt.Println("Testing calculator operations...")
+	for {
+		// Display menu
+		ui.DisplayMenu()
 
-	// Test Add
-	sum := calculator.Add(5.0, 3.0)
-	fmt.Printf("5 + 3 = %g\n", sum)
+		// Get menu choice
+		choice, err := ui.GetMenuChoice()
+		if err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
 
-	// Test Subtract
-	diff := calculator.Subtract(10.0, 4.0)
-	fmt.Printf("10 - 4 = %g\n", diff)
+		// Check for exit
+		if choice == 5 {
+			fmt.Println("Thank you for using the calculator! Goodbye!")
+			break
+		}
 
-	// Test Multiply
-	product := calculator.Multiply(6.0, 7.0)
-	fmt.Printf("6 * 7 = %g\n", product)
+		// Get numbers for calculation
+		num1, num2, err := ui.GetNumbers()
+		if err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
 
-	// Test Divide (success case)
-	quotient, err := calculator.Divide(20.0, 4.0)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-	} else {
-		fmt.Printf("20 / 4 = %g\n", quotient)
+		// Perform operation based on choice
+		var result float64
+		switch choice {
+		case 1:
+			result = calculator.Add(num1, num2)
+			fmt.Printf("%g + %g = %g\n", num1, num2, result)
+		case 2:
+			result = calculator.Subtract(num1, num2)
+			fmt.Printf("%g - %g = %g\n", num1, num2, result)
+		case 3:
+			result = calculator.Multiply(num1, num2)
+			fmt.Printf("%g * %g = %g\n", num1, num2, result)
+		case 4:
+			result, err = calculator.Divide(num1, num2)
+			if err != nil {
+				fmt.Printf("Error: %s\n", err.Error())
+			} else {
+				fmt.Printf("%g / %g = %g\n", num1, num2, result)
+			}
+		}
+
+		// Press Enter to continue
+		fmt.Print("\nPress Enter to continue...")
+		ui.WaitForEnter()
 	}
-
-	// Test Divide (error case - division by zero)
-	_, err = calculator.Divide(10.0, 0.0)
-	if err != nil {
-		fmt.Printf("Expected error for division by zero: %v\n", err)
-	}
-
-	fmt.Println("\nArchitecture validation complete!")
 }

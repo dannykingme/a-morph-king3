@@ -9,11 +9,12 @@ import (
 	"strings"
 )
 
+// scanner is shared across all input operations to maintain consistent input handling
+var scanner = bufio.NewScanner(os.Stdin)
+
 // GetNumbers prompts for and validates two numeric inputs
 // Returns both numbers and nil error on success, or zero values and error on failure
 func GetNumbers() (float64, float64, error) {
-	scanner := bufio.NewScanner(os.Stdin)
-
 	// Get first number
 	fmt.Print("Enter first number: ")
 	if !scanner.Scan() {
@@ -42,8 +43,6 @@ func GetNumbers() (float64, float64, error) {
 // GetMenuChoice prompts for and validates menu choice
 // Returns choice (1-5) and nil error on success, or zero and error on failure
 func GetMenuChoice() (int, error) {
-	scanner := bufio.NewScanner(os.Stdin)
-
 	if !scanner.Scan() {
 		return 0, errors.New("Failed to read input")
 	}
@@ -59,4 +58,9 @@ func GetMenuChoice() (int, error) {
 	}
 
 	return choice, nil
+}
+
+// WaitForEnter waits for the user to press Enter
+func WaitForEnter() {
+	scanner.Scan()
 }
